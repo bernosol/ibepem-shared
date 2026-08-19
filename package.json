@@ -1,0 +1,35 @@
+{
+  "name": "@bernosol/ibepem-estados",
+  "version": "1.0.1",
+  "description": "União fechada dos estados do aluno (statusPassoAPasso) — fonte única para o backend, o painel e o app do IBEPEM",
+  "license": "UNLICENSED",
+  "main": "./index.js",
+  "module": "./index.mjs",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.mjs",
+    "index.d.ts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bernosol/ibepem-shared.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/"
+  }
+}

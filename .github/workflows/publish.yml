@@ -1,0 +1,54 @@
+name: Publish package
+
+# Publica só em tag de versão. Push em master não publica: publicar é irreversível
+# no GitHub Packages, e uma versão publicada por engano não se apaga — se sobrescreve
+# com outra versão, o que deixa rastro em todo consumidor.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@bernosol'
+
+      # O teste roda ANTES da publicação: uma lista divergente entre index.js e
+      # index.mjs, ou um estado a mais sem passar pela spec, reprova sem publicar.
+      - name: Test
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee /tmp/test.log
+          grep -qE '^# pass [1-9][0-9]*$' /tmp/test.log
+          grep -qE '^# fail 0$' /tmp/test.log
+
+      # A tag e a versão do package.json têm de concordar. Sem isto, `git tag v1.0.1`
+      # sobre um package.json em 1.0.0 publica 1.0.0 de novo e falha por duplicidade,
+      # ou pior, publica algo que ninguém pediu.
+      - name: Conferir que a tag bate com a versão do package.json
+        shell: bash
+        run: |
+          VERSAO_PKG="$(node -p "require('./package.json').version")"
+          VERSAO_TAG="${GITHUB_REF_NAME#v}"
+          echo "package.json: $VERSAO_PKG | tag: $VERSAO_TAG"
+          test "$VERSAO_PKG" = "$VERSAO_TAG"
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
