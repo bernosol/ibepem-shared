@@ -46,7 +46,7 @@ ser de tipo. É o array, somado a um teste próprio do backend:
 ```js
 const { ESTADOS } = require('@bernosol/ibepem-estados');
 
-ESTADOS.includes(valor); // 10 estados, congelados
+ESTADOS.includes(valor); // 9 estados, congelados
 ```
 
 ---
@@ -85,7 +85,8 @@ Antes de acrescentar, o estado precisa ter escritor e leitor declarados
 — estado órfão não entra. Um teste compara esta lista com os estados que
 as transições conseguem produzir.
 
-A lista está em **dois** arquivos, `index.js` (CommonJS) e `index.mjs` (ESM), porque
-CommonJS não consegue `require` de ESM e este pacote não tem etapa de build. `npm test`
-compara as duas e reprova se divergirem — é o que impede a fonte única de passar a ter
-duas versões em silêncio.
+A lista está em **três** arquivos: `index.js` (CommonJS) e `index.mjs` (ESM), porque
+CommonJS não consegue `require` de ESM e este pacote não tem etapa de build, e
+`index.d.ts`, a tupla de onde o tipo deriva. `npm test` compara cada um com a lista
+escrita à mão no teste e reprova se qualquer um divergir — é o que impede a fonte única
+de passar a ter mais de uma versão em silêncio.
