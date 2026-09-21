@@ -9,7 +9,6 @@
 export declare const ESTADOS: readonly [
   'LEAD',
   'Criando senha',
-  'Enviando Docs',
   'Docs a validar',
   'Escolhendo cronograma',
   'Aguardando pagamento da inscrição',
