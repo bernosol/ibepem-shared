@@ -46,7 +46,7 @@ ser de tipo. É o array, somado a um teste próprio do backend:
 ```js
 const { ESTADOS } = require('@bernosol/ibepem-estados');
 
-ESTADOS.includes(valor); // 9 estados, congelados
+ESTADOS.includes(valor); // 11 estados, congelados
 ```
 
 ---
@@ -84,6 +84,10 @@ Documentação não é evidência de que ninguém lê.
 Antes de acrescentar, o estado precisa ter escritor e leitor declarados
 — estado órfão não entra. Um teste compara esta lista com os estados que
 as transições conseguem produzir.
+
+`Trancado` e `Cancelado` (2.1.0, Spec 007, Bloco 10) ficam fora do fluxo, no fim da lista, e não saem para
+lugar nenhum além do que a tabela do backend declarar. Escritor: as operações `TRANCAR` e `CANCELAR` do
+backend; leitor: painel e app, nos Blocos 12 e 13.
 
 A lista está em **três** arquivos: `index.js` (CommonJS) e `index.mjs` (ESM), porque
 CommonJS não consegue `require` de ESM e este pacote não tem etapa de build, e

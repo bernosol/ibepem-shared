@@ -4,11 +4,12 @@ const assert = require('node:assert/strict');
 const { ESTADOS } = require('../index.js');
 
 // A §4 da SPEC-004 fixa nove estados: a tabela de lá tem dez linhas, e a emenda de
-// 16/09/2026 logo abaixo dela tira 'Enviando Docs' do pacote. Este arquivo é a guarda do
+// 16/09/2026 logo abaixo dela tira 'Enviando Docs' do pacote. A Spec 007 (Bloco 10, T243) acrescenta
+// 'Trancado' e 'Cancelado', fora do fluxo, no fim da tupla: são onze. Este arquivo é a guarda do
 // pacote: se alguém acrescentar, remover ou renomear um estado sem passar pela spec,
 // aqui reprova.
 //
-// Os nove estão escritos à mão, um por linha, e NÃO derivados de ESTADOS — um teste
+// Os onze estão escritos à mão, um por linha, e NÃO derivados de ESTADOS — um teste
 // que comparasse a lista consigo mesma passaria em qualquer alteração.
 const NOVE_ESTADOS_DA_SPEC = [
   'LEAD',
@@ -22,13 +23,18 @@ const NOVE_ESTADOS_DA_SPEC = [
   'Inadimplente'
 ];
 
+// Os dois da Spec 007, escritos à mão: a grafia exata é literal que painel, app e backend copiam.
+const DOIS_DA_SPEC_007 = ['Trancado', 'Cancelado'];
+
+const ONZE_ESTADOS = [...NOVE_ESTADOS_DA_SPEC, 'Trancado', 'Cancelado'];
+
 describe('ESTADOS — a união da §4 da SPEC-004', () => {
-  test('tem exatamente nove estados', () => {
-    assert.equal(ESTADOS.length, 9);
+  test('tem exatamente onze estados', () => {
+    assert.equal(ESTADOS.length, 11);
   });
 
   test('é exatamente a lista da spec, na ordem do fluxo', () => {
-    assert.deepEqual([...ESTADOS], NOVE_ESTADOS_DA_SPEC);
+    assert.deepEqual([...ESTADOS], ONZE_ESTADOS);
   });
 
   test('inclui os dois que faltavam na união do painel', () => {
@@ -39,6 +45,13 @@ describe('ESTADOS — a união da §4 da SPEC-004', () => {
     assert.ok(ESTADOS.includes('Aguardando pagamento da inscrição'));
   });
 
+  test('os nove antigos seguem nas mesmas posições, e os dois novos vêm no fim', () => {
+    // Um teste do painel usa o índice de 'Aguardando contrato': deslocar os antigos o quebraria.
+    NOVE_ESTADOS_DA_SPEC.forEach((estado, i) => assert.equal(ESTADOS[i], estado));
+    assert.equal(ESTADOS[9], DOIS_DA_SPEC_007[0]);
+    assert.equal(ESTADOS[10], DOIS_DA_SPEC_007[1]);
+  });
+
   test('não tem valor repetido', () => {
     assert.equal(new Set(ESTADOS).size, ESTADOS.length);
   });
@@ -46,7 +59,7 @@ describe('ESTADOS — a união da §4 da SPEC-004', () => {
   test('é imutável — consumidor não altera a fonte única', () => {
     assert.ok(Object.isFrozen(ESTADOS));
     assert.throws(() => { ESTADOS.push('Inventado'); }, TypeError);
-    assert.equal(ESTADOS.length, 9);
+    assert.equal(ESTADOS.length, 11);
   });
 });
 
@@ -71,16 +84,16 @@ describe('as duas entradas do pacote não podem divergir', () => {
 // de volta em um arquivo só reprove por asserção contra a spec — e não apenas pela
 // diferença entre dois arquivos.
 describe('index.mjs — contra a lista da spec', () => {
-  test('tem exatamente nove estados', async () => {
+  test('tem exatamente onze estados', async () => {
     const esm = await import('../index.mjs');
 
-    assert.equal(esm.ESTADOS.length, 9);
+    assert.equal(esm.ESTADOS.length, 11);
   });
 
   test('é exatamente a lista da spec, na ordem do fluxo', async () => {
     const esm = await import('../index.mjs');
 
-    assert.deepEqual([...esm.ESTADOS], NOVE_ESTADOS_DA_SPEC);
+    assert.deepEqual([...esm.ESTADOS], ONZE_ESTADOS);
   });
 });
 
@@ -124,12 +137,12 @@ describe('index.d.ts — contra a lista da spec', () => {
     require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'index.d.ts'), 'utf8')
   );
 
-  test('tem exatamente nove estados', () => {
-    assert.equal(dts.length, 9);
+  test('tem exatamente onze estados', () => {
+    assert.equal(dts.length, 11);
   });
 
   test('é exatamente a lista da spec, na ordem do fluxo', () => {
-    assert.deepEqual(dts, NOVE_ESTADOS_DA_SPEC);
+    assert.deepEqual(dts, ONZE_ESTADOS);
   });
 });
 
