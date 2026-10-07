@@ -15,5 +15,7 @@ export const ESTADOS = Object.freeze([
   'Aguardando contrato',
   'Adimplente',
   'Formado',
-  'Inadimplente'
+  'Inadimplente',
+  'Trancado',
+  'Cancelado'
 ]);

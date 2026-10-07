@@ -15,7 +15,9 @@ export declare const ESTADOS: readonly [
   'Aguardando contrato',
   'Adimplente',
   'Formado',
-  'Inadimplente'
+  'Inadimplente',
+  'Trancado',
+  'Cancelado'
 ];
 
 /**

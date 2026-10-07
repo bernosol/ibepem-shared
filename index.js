@@ -4,7 +4,9 @@
 //   - painel e app, como TIPO (a união fechada, via index.d.ts)
 //   - backend, como VALOR em runtime (este arquivo, CommonJS puro, sem etapa de build)
 //
-// A ordem é a da §4 da SPEC-004, que segue o fluxo do aluno. Não é alfabética por
+// A ordem é a da §4 da SPEC-004, que segue o fluxo do aluno. 'Trancado' e 'Cancelado' (Spec 007,
+// Bloco 10) ficam FORA do fluxo e no fim da tupla, para não deslocar o índice dos nove antigos, que
+// um teste do painel usa. Não é alfabética por
 // escolha: quem lê a lista tem de conseguir enxergar o percurso.
 //
 // Acrescentar ou remover estado aqui é alterar a máquina de estados. Antes de remover,
@@ -19,7 +21,9 @@ const ESTADOS = Object.freeze([
   'Aguardando contrato',
   'Adimplente',
   'Formado',
-  'Inadimplente'
+  'Inadimplente',
+  'Trancado',
+  'Cancelado'
 ]);
 
 module.exports = { ESTADOS };
